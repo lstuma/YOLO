@@ -50,22 +50,3 @@ def iou(box1, box2, anchor_type="midpoint"):
     print("--> iou_width: ", iou_dim[0], ", iou_height: ", iou_dim[1])
 
     return abs(iou_dim[0] * iou_dim[1])
-
-
-if __name__ == '__main__':
-    box1 = [2, 2, 2, 2]
-    box2 = [7, 4, 2, 4]
-    print("Expected outcome: 0,\tOutcome: ", iou(box1, box2))
-
-
-    box1 = [2, 2, 3, 1]
-    box2 = [3, 3, 1, 2]
-    print("Expected outcome: 0.5,\tOutcome: ", iou(box1, box2))
-
-    box1 = [2, 2, 3, 1]
-    box2 = [1, 3, 1, 2]
-    print("Expected outcome: 0.5,\tOutcome: ", iou(box1, box2))
-
-    box1 = [2, 2, 7, 5]
-    box2 = [2.5, 2.5, 1, 2]
-    print("Expected outcome: 2,\tOutcome: ", iou(box1, box2))
