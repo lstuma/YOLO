@@ -46,10 +46,10 @@ class TestStringMethods(unittest.TestCase):
         if outcome != 2: self.fail("Case 4: Failed due to unexpected outcome")
 
     def test_nmax(self):
-        # Import nmax supression calc function
+        # Import nmax suppression calc function
         from utils.nmax import nmax
 
-        print("\n[Test] Testing nmax supression")
+        print("\n[Test] Testing nmax suppression")
 
         # Basic funcionality
         box1 = [0.9, 3, 2, 4, 2, 1]
