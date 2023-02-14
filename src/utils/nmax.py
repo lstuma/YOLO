@@ -1,17 +1,17 @@
 from utils.iou import iou
 
-# Non max supression
+# Non max suppression
 def nmax(bboxes: list, threshold=0.5):
     """
         bboxes: list = [[confidence, x, y, width, height, label],...]
-        threshold: floating point = IoU threshold for supression
-        returns: resulting bounding boxes after non-max supression
+        threshold: floating point = IoU threshold for suppression
+        returns: resulting bounding boxes after non-max suppression
     """
 
     # Sort bboxes by confidence
     bboxes.sort(key=lambda bbox: 1-bbox[0])
 
-    # List of boxes resulting after nmax supression
+    # List of boxes resulting after nmax suppression
     true_boxes = []
 
 
