@@ -1,4 +1,4 @@
-from iou import iou
+from utils.iou import iou
 
 # Non max supression
 def nmax(bboxes: list, threshold=0.5):
@@ -9,17 +9,18 @@ def nmax(bboxes: list, threshold=0.5):
     """
 
     # Sort bboxes by confidence
-    bboxes.sort(key=lambda bbox: bbox[0])
+    bboxes.sort(key=lambda bbox: 1-bbox[0])
+
+    # List of boxes resulting after nmax supression
+    true_boxes = []
+
 
     # Check all boxes
     while(bboxes):
-        # List of boxes resulting after nmax supression
-        true_boxes = []
-
         true_boxes.append(bboxes.pop(0))
-        for i, bbox in enumerate(bboxes):
+        for bbox in bboxes.copy():
             # Remove bbox if it is overlapping and has same label as the selected true box
             if true_boxes[-1][5] == bbox[5] and iou(true_boxes[-1], bbox) > threshold:
-                bboxes.pop(i)
+                bboxes.remove(bbox)
 
     return true_boxes
