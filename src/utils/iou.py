@@ -23,30 +23,27 @@ def iou(box1, box2, anchor_type="midpoint"):
 
     # Calculate IoU
     iou_dim = [0, 0]
-    print(box1, box2)
     # Check cases:
     for i in range(2):
         j = i+2
         # box1 inside box2
         if box1[i] >= box2[i] and box1[j] <= box2[j]:
-            print("box1 inside box2")
+            #print("box1 inside box2")
             iou_dim[i] = box1[j]-box1[i]
         # box2 inside box1
         elif box2[i] >= box1[i] and box2[j] <= box1[j]:
-            print("box2 inside box1")
+            #print("box2 inside box1")
             iou_dim[i] = box2[j]-box2[i]
         # box1 has left side in box2
         elif box2[i] <= box1[i] <= box2[j]:
-            print("box1 has left side in box2")
+            #print("box1 has left side in box2")
             iou_dim[i] = box2[j]-box1[i]
         # box2 has left side in box1
         elif box1[i] <= box2[i] <= box1[j]:
-            print("box2 has left side in box1")
+            #print("box2 has left side in box1")
             iou_dim[i] = box2[i]-box1[j]
         # boxes do not intersect
-        elif box2[j] <= box1[i] or box2[i] >= box1[j]:
-            print("no intersection")
-
-    print("--> iou_width: ", iou_dim[0], ", iou_height: ", iou_dim[1])
+        #elif box2[j] <= box1[i] or box2[i] >= box1[j]:
+            #print("no intersection")
 
     return abs(iou_dim[0] * iou_dim[1])
