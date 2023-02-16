@@ -1,7 +1,7 @@
-import numpy
+import numpy as np
 from iou import iou
 
-class chmAP:
+class mAP:
 
     def __init__(self, start: float, increment: float, stop: float, iou_threshold=.5):
         self.start = start
@@ -11,8 +11,8 @@ class chmAP:
 
     def __call__(self, pred_boxes: list, true_boxes: list):
         """
-        pred_boxes: tuple[tuple] = [[midpoint_x, midpoint_y, width, height, confidence],]
-        true_boxes: tuple[tuple] = [[midpoint_x, midpoint_y, width, height],]
+        pred_boxes: tuple[tuple] = [[midpoint_x, midpoint_y, width, height, c1, ..., cn],]
+        true_boxes: tuple[tuple] = [[midpoint_x, midpoint_y, width, height, c1, ..., cn],]
         """
 
         combinations = []
@@ -46,14 +46,48 @@ class chmAP:
             precisions.append(precision)
             recalls.append(recall)
 
+        return _polygonarea(recalls, precisions)
 
 
 
 
+    def _polygonarea(xs, ys):
+
+        d = 0
+
+        ys += [.0, .0, max(ys)]
+        xs += [max(xs), .0, .0]
+
+        for i in range(len(xs)):
+            if i == len(xs)-1:
+                i1 = i
+                i2 = 0
+            else:
+                i1 = i
+                i2 = i+1
+
+            x1, y1 = xs[i1], ys[i1]
+            x2, y2 = xs[i2], ys[i2]
+
+            print(np.array([
+                [x1, x2],
+                [y1, y2]
+            ]))
+
+            d += abs(np.linalg.det(np.array([
+                [x1, x2],
+                [y1, y2]
+            ])))
+
+        return d/2
 
 
-        return
+
+
 
 
 if __name__ == "__main__":
     m = mAP(.05, .05, .95)  # YO ADD TESTS LATER
+    print(m.test())
+
+
