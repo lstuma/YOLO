@@ -15,6 +15,25 @@ class mAP:
         true_boxes: tuple[tuple] = [[midpoint_x, midpoint_y, width, height, c1, ..., cn],]
         """
 
+        val = None
+        for c_index in range(1, len(pred_boxes[0])-3):
+            for iou_threshold_ in range(self.start, self.stop, self.increment):
+                val += _manual_mAP(pred_boxes, true_boxes, iou_threshold_, c_index)
+
+            val /= len(range(self.start, self.stop, self.increment))
+        val /= len(range(1, len(pred_boxes[0])-3))
+
+        return val
+
+
+    def _manual_mAP(pred_boxes, true_boxes, iou_threshold, c_index):
+        """
+        pred_boxes: tuple[tuple] = [[midpoint_x, midpoint_y, width, height, c1, ..., cn],]
+        true_boxes: tuple[tuple] = [[midpoint_x, midpoint_y, width, height, c1, ..., cn],]
+        iou_threshold: float
+        c_index: int = 1...n
+        """
+
         combinations = []
         for pred in pred_boxes:
             box = None
@@ -22,9 +41,9 @@ class mAP:
             for true in true_boxes:
                 box = true
                 i = iou(pred, true)
-                if i > self.iou_threshold:
+                if i > iou_threshold:
                     break
-            combinations.append([i, pred[-1], box is not None,])  # iou, confidence, TP/FP
+            combinations.append([i, pred[3+c_index], box is not None,])  # iou, confidence, TP/FP
 
         combinations.sort(key=lambda k: k[1], reverse=True)
 
@@ -53,26 +72,17 @@ class mAP:
 
     def _polygonarea(xs, ys):
 
-        d = 0
+        d = .0
 
         ys += [.0, .0, max(ys)]
         xs += [max(xs), .0, .0]
 
         for i in range(len(xs)):
-            if i == len(xs)-1:
-                i1 = i
-                i2 = 0
-            else:
-                i1 = i
-                i2 = i+1
+            if i == len(xs)-1: i1, i2 = i, 0
+            else:              i1, i2 = i, i+1
 
             x1, y1 = xs[i1], ys[i1]
             x2, y2 = xs[i2], ys[i2]
-
-            print(np.array([
-                [x1, x2],
-                [y1, y2]
-            ]))
 
             d += abs(np.linalg.det(np.array([
                 [x1, x2],
