@@ -75,6 +75,8 @@ class TestStringMethods(unittest.TestCase):
         print(f"Case 2: Expected outcome: [[0.9, 3, 2, 4, 2, 1],..],\tOutcome: {outcome}")
         if outcome != [[0.9, 3, 2, 4, 2, 1], [0.7, 2.75, 2, 3, 2, 2]]: self.fail("Case 2: Failed due to unexpected outcome")
 
+    def test_mAP(self):
+        ...
 
 if __name__ == '__main__':
     # Run unittests
