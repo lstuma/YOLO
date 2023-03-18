@@ -28,9 +28,9 @@ class YOLOLoss:
         y: torch.Tensor = [[pc, bx, by, bh, bw, c1, c2,..., cn],]
         """
 
-        return    self.w_coord * _localization_loss(x, y)  \
-               +  self.w_conf  * _confidence_loss(x, y)    \
-               +  self.w_class * _class_loss(x, y)
+        return    self.w_coord * self._localization_loss(x, y)  \
+               +  self.w_conf  * self._confidence_loss(x, y)    \
+               +  self.w_class * self._class_loss(x, y)
 
 
     def _localization_loss(self, x, y):
