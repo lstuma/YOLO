@@ -13,7 +13,6 @@ class YOLOModel(nn.Module):
             self.network = read_struct(f)
 
 
-
     def forward(self, x):
         x = self.network(x)
         return x

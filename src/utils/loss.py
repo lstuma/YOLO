@@ -4,23 +4,23 @@ from math import sqrt
 
 class YOLOLoss:
 
-    def __init__(self, n_classes, n_grid_cells, n_bounding_boxes, w_coord=1., w_conf=1., w_class=1., noobj=0.5):
+    def __init__(self, n_classes, n_grid_cells, w_coord=1., w_conf=1., w_class=1., w_noobj=.5, noobj_threshold=.5):
         """
         n_classes: int
         n_grid_cells: int
-        n_bounding_boxes: int
         w_coord: float
         w_conf: float
         w_class: float
-        noobj: flaot
+        w_noobj: float
+        noobj_threshold: float
         """
         self.C = n_classes
         self.S = n_grid_cells
-        self.B = n_bounding_boxes
         self.w_coord = w_coord
         self.w_conf = w_conf
         self.w_class = w_class
-        self.noobj = noobj
+        self.w_noobj = w_noobj
+        self.noobj_threshold = noobj_threshold
 
     def __call__(self, x, y):
         """
@@ -34,20 +34,20 @@ class YOLOLoss:
 
 
     def _localization_loss(self, x, y):
-        return sum(sum(sum([
+        return sum(sum((
                             (x[i][1] - y[i][1])**2,
                             (x[i][2] - y[i][2])**2,
                             (sqrt(x[i][3]) - sqrt(y[i][3]))**2,
                             (sqrt(x[i][4]) - sqrt(y[i][4]))**2,
-                            ]) for j in range(self.B+1) if y[i][0] > .5) for i in range((self.S**2)+1))
+                        )) for i in range((self.S**2)+1) if y[i][0] > self.noobj_threshold)
 
     def _confidence_loss(self, x, y):
-        obj = sum(sum((x[i][0] - x[i][0])**2 for j in range((self.B**2)+1) if y[i][0] > .5) for i in range((self.S**2)+1))
+        obj = sum((x[i][0] - x[i][0])**2 for i in range((self.S**2)+1) if y[i][0] > self.noobj_threshold)
 
-        noobj = sum(sum((x[i][0] - x[i][0])**2 for j in range((self.B**2)+1) if y[i][0] <= .5) for i in range((self.S**2)+1))
+        noobj = sum((x[i][0] - x[i][0])**2 for i in range((self.S**2)+1) if y[i][0] <= self.noobj_threshold)
 
-        return obj + noobj
+        return obj + self.w_noobj * noobj
 
     def _class_loss(self, x, y):
-        return sum(sum((x[4+c]-y[4+c])**2 for c in range(1, self.C+1)) for i in range((self.S**2)+1) if y[i][0] > .5)
+        return sum(sum((x[4+c]-y[4+c])**2 for c in range(1, self.C+1)) for i in range((self.S**2)+1) if y[i][0] > self.noobj_threshold)
 
