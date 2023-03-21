@@ -1,2 +1,4 @@
 yolo-utils
-pytorch
+torch
+torchvision
+numpy

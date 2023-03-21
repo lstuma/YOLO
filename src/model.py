@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from utils.max_pool import MaxPoolLayer
 from utils.read_struct import read_struct
 
 
